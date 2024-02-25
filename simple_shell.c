@@ -1,17 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <string.h>
 
 #define MAX_COMMAND_LENGTH 2048
 
-void display_promt()
+/**
+ * show_prompt - function displays the shell prompt
+ */
+void show_prompt(void)
 {
-	printf(" $ ");
+	printf("$ ");
 }
 
-int execute_shell_command(char *command)
+/**
+ * execute_command -Function executes a given command provided by user.
+ * @command: The command to execute
+ * Return: 0 on success,otherwise return -1
+ */
+int execute_command(char *command)
 {
 	pid_t pid = fork();
 
@@ -22,6 +30,7 @@ int execute_shell_command(char *command)
 	}
 	else if (pid == 0)
 	{
+
 		execlp(command, command, NULL);
 		fprintf(stderr, "Error: Command '%s' not found\n", command);
 		exit(EXIT_FAILURE);
@@ -29,18 +38,26 @@ int execute_shell_command(char *command)
 	else
 	{
 		int status;
+
 		waitpid(pid, &status, 0);
 	}
+
 	return (0);
 }
 
-int main (void)
+/**
+ * main - Entry point for thr program
+ * Return: EXIT_SUCCESS on success, EXIT_FAILURE on failure
+ */
+int main(void)
 {
 	char command[MAX_COMMAND_LENGTH];
 
 	while (1)
 	{
-		display_promt();
+		show_prompt();
+
+
 		if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL)
 		{
 			if (feof(stdin))
@@ -54,9 +71,10 @@ int main (void)
 				return (EXIT_FAILURE);
 			}
 		}
+
 		command[strcspn(command, "\n")] = '\0';
 
-		if (execute_shell_command(command) < 0)
+		if (execute_command(command) < 0)
 		{
 			return (EXIT_FAILURE);
 		}
