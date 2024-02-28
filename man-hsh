@@ -1,0 +1,22 @@
+.Name
+	hsh (hshell)
+
+.Description
+	hsh is a shell program which links the terminal to the linux kernel on the platform on which it is installed. It works by receiving input from standard input and pushes them to the kernel for execution. Results from the kernel are the pushed to standard output. It supports various functionalities both system calls and inbuilt functions.
+
+.Synopsis
+	hsh [command string].
+	hsh starts execution of input strings by parsing through each path node from PATH environmental variable and finds the first node capable of executing the first parameter of the string and the goes forth to execute the parameter using execve system call.
+
+.Builtins
+	Supported builtins include: cd, env, setenv, unsetenv, echo
+
+.Return
+	On success it returns 0. However, on error -1  is returned and errno set appropriately in the STDERR.
+
+.See also
+	sh(1), ksh(1), csh(1), bash(1), readline(3)
+
+.Authors
+	Brian Oyaro
+	Anthony Ndegwa
