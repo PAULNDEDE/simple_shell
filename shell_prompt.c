@@ -1,62 +1,40 @@
 #include "shell.h"
-
-/**
- * display_prompt - function displays a  shell prompt using $ sign
- */
-void display_prompt(void)
+int main()
 {
-printf("$ ");
-fflush(stdout);
-}
-/**
- * execute_cmd - Execute a given command from the user
- * @cmd: The command to be executed executed
- */
-void execute_cmd(char *cmd)
-{
-pid_t pid;
-int status;
+	void execute_command(char *args);
+	char command[MAX_COMMAND_LENGTH];
 
-pid = fork();
+	
+	while (1)
+	{
+		int m = 0;
 
-if (pid < 0)
-{
-perror("Fork failed");
-exit(EXIT_FAILURE);
-}
-else if (pid == 0)
-{
-execlp(cmd, cmd, (char *)NULL);
-perror("Execution failed");
-exit(EXIT_FAILURE);
-}
-else
-{
-waitpid(pid, &status, 0);
-}
-}
+		printf("$");
+	/*Get command from user*/
+		if (fgets(command, sizeof(command), stdin) == NULL)
+		{
+			printf("\nEXITING SHELL..\n");
+			break;
+		}
 
-/**
- * main - Entry point for the simple shell program
- *
- * Return: Always 0( success)
- */
-int main(void)
-{
-char buffer[BUFFER_SIZE];
-
-while (1)
-{
-display_prompt();
-if (!fgets(buffer, BUFFER_SIZE, stdin))
-break;
-char *newline = strchr(buffer, '\n');
-if (newline)
-*newline = '\0';
-
-execute_cmd(buffer);
-}
-
-printf("\n");
-return (0);
+		command[strcspn(command, "\n")] = '\0';
+	/*fork to execute  a command*/
+		pid_t pid = fork();
+		if (pid < 0){
+			perror("Fork failed");
+			exit(EXIT_FAILURE);
+		} else if (m == 0){
+			execute_command(command);
+		}
+		else if (pid == 0) {
+			execlp(command, command, NULL);
+			printf("ERROR: command '%s' not found.\n", command);
+			exit(EXIT_FAILURE);
+		}
+		else {
+			int status;
+			waitpid(pid, &status, 0);
+		}
+	}
+	return (0);
 }
