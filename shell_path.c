@@ -1,30 +1,59 @@
 #include "main.h"
 
 /**
- * execute_command -the function executes a shell command
- * @command: The command to execute
- * @args: Array of command line arguments
+ * search_executable -function  finds the first executable path
+ * of the user's first input token
+ * @token: first tokenized input
+ * Return: pointer to the first executable path on success, NULL otherwise
  */
-void execute_command(char *command, char **args)
+char *search_executable(char *token)
 {
-	pid_t pid;
-	int status;
+    int m = 0, n = 0;
+    struct stat st;
+    char *path = getenv("PATH");
+    char *path_copy = NULL;
+    char *path_token = NULL;
+    char *executable_path = NULL;
 
-	pid = fork();
+    if (path == NULL || token == NULL)
+        return NULL;
 
-	if (pid < 0)
-	{
-	perror("Fork failed");
-	exit(EXIT_FAILURE);
-	}
-	else if (pid == 0)
-	{
-	execvp(command, args);
-	printf("Command not found: %s\n", command);
-	exit(EXIT_FAILURE);
-	}
-	else
-	{
-	waitpid(pid, &status, 0);
-	}
+    path_copy = strdup(path);
+    if (path_copy == NULL)
+        return NULL;
+
+    path_token = strtok(path_copy, ":");
+    while (path_token)
+    {
+        executable_path = malloc(strlen(token) + strlen(path_token) + 2);
+        if (executable_path == NULL)
+        {
+            free(path_copy);
+            return NULL;
+        }
+
+        for (m = 0; path_token[m]; m++)
+            executable_path[m] = path_token[m];
+        executable_path[m++] = '/';
+        for (n = 0; token[n]; n++)
+            executable_path[m + n] = token[n];
+        executable_path[m + n] = '\0';
+
+        
+        if (stat(executable_path, &st) == 0)
+        {
+            free(path_copy);
+            return executable_path;
+        }
+
+       
+        free(executable_path);
+
+        path_token = strtok(NULL, ":");
+    }
+
+    
+    free(path_copy);
+
+    return NULL;
 }

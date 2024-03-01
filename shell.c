@@ -1,63 +1,44 @@
 #include "main.h"
 
-void exit_command(void)
+/**
+ * main - Entry point of the Program
+ * @argc: Arguments
+ * @argv: Array of Arguments
+ * Return: 0 (success)
+ */
+int main(int argc, char **argv)
 {
-	exit(EXIT_SUCCESS);
-}
+	int counter = 0;
+	ssize_t index = 0;
+	size_t size = 0;
+	char *buffer = NULL;
 
-
-
-void env_command(void);
-
-void shell(void) {
-    char input[100];
-    char *command;
-    char *args[10];
-    pid_t pid;
-
-    while (1) {
-        printf("$ ");
-        fflush(stdout);
-
-        
-        if (fgets(input, sizeof(input), stdin) == NULL) {
-           
-            printf("\n");
-            break;
-        }
-
-        
-        parse_input(input, &command, args);
-
-      
-        if (command != NULL && strcmp(command, "env") == 0) {
-            env_command();
-        } else {
-           
-            pid = fork();
-            if (pid == -1) {
-                perror("fork");
-            } else if (pid == 0) {
-                execve(command, args, NULL);
-                perror("execve");
-                exit(EXIT_FAILURE);
-            } else {
-                wait(NULL);
-            }
-        }
-    }
-}
-
-int main(void) {
-    shell();
-    return 0;
-}
-
-void env_command(void) {
-    extern char **environ;
-    int a;
-
-    for (a = 0; environ[a] != NULL; a++) {
-        printf("%s\n", environ[a]);
-    }
+	if (argc < 0)
+		exit(EXIT_FAILURE);
+	while (1)
+	{
+		counter++;
+		buffer = NULL;
+		signal(SIGINT, control_handler);
+		if (isatty(STDIN_FILENO))
+			write(STDOUT_FILENO, "$ ", 2);
+		index = getline(&buffer, &size, stdin);
+		if (index == -1)
+		{
+			free(buffer);
+			exit(0);
+		}
+		if (buffer[0] != '\n')
+		{
+			if (buffer[0] != '#')
+			{
+				buffer = handle_hash(buffer);
+				tokenizer(buffer, argv, counter);
+			}
+			free(buffer);
+		}
+		else
+			free(buffer);
+	}
+	return (0);
 }
