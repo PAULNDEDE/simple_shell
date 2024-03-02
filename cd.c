@@ -1,31 +1,32 @@
 #include "main.h"
-
 /**
- * change_directory -Function changes directory
- * @args: user input arguments
- * Return: Always 0 (success),else  -1 on error
+ * cd - changes directory
+ * @tokens: tokenized user input
+ * Return: 0 on suucees
+ * -1 on err an errno set appropriately
  */
-int change_dir(char **args)
+int cd(char **tokens)
 {
-    char *home_dir = getenv("HOME");
-    int return_value = 0;
+	char *home = getenv("HOME");
+	int return_value = 0;
 
-    if (strcmp(args[1], ".") == 0)
-        ;
-    else if (strcmp(args[1], "~") == 0 || (args[1] == NULL))
-    {
-        return_value = chdir(home_dir);
-        if (return_value == -1)
-        {
-            perror("cd");
-            return (-1);
-        }
-    }
-    else
-    {
-        return_value = chdir(args[1]);
-        if (return_value == -1)
-            return (-1);
-    }
-    return (return_value);
+	if (strcmp(tokens[1], ".") == 0)
+		;
+	else if (strcmp(tokens[1], "~") == 0 || (tokens[1] == NULL))
+	{
+		return_value = chdir(home);
+		if (return_value == -1)
+		{
+			perror("cd");
+			return (-1);
+		}
+	}
+	else
+	{
+		return_value = chdir(tokens[1]);
+		if (return_value == -1)
+			return (-1);
+	}
+	return (return_value);
 }
+

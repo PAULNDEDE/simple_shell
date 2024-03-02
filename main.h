@@ -11,20 +11,22 @@
 #include <sys/stat.h>
 
 extern char **environ;
-void handle_signl(int signl);
 int tokenizer(char *line, char **argv, int count);
-int handle_builtin(char **args, char *input, char **argv, int count);
-void prnt_env(char **envp);
-void exit_program(char **tokens, char *input);
+int builtin(char **tks, char *tk, char **argv, int count);
+void shell_environ(void);
+void shell_exit(char **token, char *utk);
 char *search_executable(char *token);
 int execute_command(char **tokens, char **argv, char *input, int count);
-char *process_input(char *input);
+char *hash_handler(char *str);
 int convert_string_to_int(char *str);
 void print_error(char **cmd, char **argv, int count);
 void exit_error(char **tokens, char **argv, int count);
-int print_number(int value);
+int printer(int value);
+void handle_signl(int signl);
+int cd(char **tokens);
+void shell_error(char **tkns, char **argv, int count);
 int put_character(char ch);
-int change_dir(char **args);
-void err1(char **tokens, char **argv, int count);
+int printer(int value);
+
 
 #endif

@@ -7,6 +7,6 @@
  */
 void handle_signl(int signl)
 {
-    (void)signl;
-    write(STDOUT_FILENO, "\n$ ", 3);
+	(void)signl;
+	write(STDOUT_FILENO, "\n$ ", 3);
 }

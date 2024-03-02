@@ -1,21 +1,20 @@
 #include "main.h"
-
 /**
- * exit_program -function exits a shell program
- * @tokens: user input(tokenized)
- * @input:user input untokenized
+ * shell_exit -function exits shell
+ * @token: user input (tokenized)
+ * @utk: untokenized user input
  * Return: Nothing
  */
-void exit_program(char **tokens, char *input)
+void shell_exit(char **token, char *utk)
 {
-    int exit_status = 0, i = 0;
+	int exit_value = 0, a = 0;
 
-    if (tokens[1] != NULL)
-        exit_status = a_toi(tokens[1]);
+	if (token[1] != NULL)
+		exit_value = atoi(token[1]);
 
-    free(input);
-    for (i = 0; tokens[i]; i++)
-        free(tokens[i]);
-    free(tokens);
-    exit(exit_status);
+	free(utk);
+	for (a = 0; token[a]; a++)
+		free(token[a]);
+	free(token);
+	exit(exit_value);
 }
