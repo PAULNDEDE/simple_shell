@@ -1,5 +1,9 @@
 #ifndef MAIN_H
 #define MAIN_H
+
+#define MAX_ALIAS_LEN 100
+#define MAX_ALIASES 50
+
 #include <stdio.h>
 #include <signal.h>
 #include <unistd.h>
